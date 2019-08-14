@@ -1,7 +1,7 @@
 ---
-title: "Challenges and Opportunities: From Near-memory Computing to In-memory Computing (textbfinvited)"
+title: "Challenges and Opportunities: From Near-memory Computing to In-memory Computing (INVITED)"
 authors: ["Soroosh Khoram","Yue Zha","Jialiang Zhang","Jing Li"]
-date: 2017-03-01
+date: 2017-03-19
 doi: "10.1145/3036669.3038242"
 publication_types: ["1"]
 publication: "_Proceedings of the 2017 ACM on International Symposium on Physical Design_"

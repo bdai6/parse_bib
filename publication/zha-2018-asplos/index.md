@@ -1,7 +1,7 @@
 ---
 title: "Liquid Silicon-Monona: A Reconfigurable Memory-Oriented Computing Fabric with Scalable Multi-Context Support"
 authors: ["Yue Zha","Jing Li"]
-date: 2018-03-01
+date: 2018-03-19
 doi: "10.1145/3173162.3173167"
 publication_types: ["1"]
 publication: "_23nd International Conference on Architectural Support for Programming Languages and Operating Systems_"

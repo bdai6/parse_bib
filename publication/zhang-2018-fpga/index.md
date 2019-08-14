@@ -1,7 +1,7 @@
 ---
 title: "Degree-aware Hybrid Graph Traversal on FPGA-HMC Platform"
 authors: ["Jialiang Zhang","Jing Li"]
-date: 2018-02-01
+date: 2018-02-25
 doi: "10.1145/3174243.3174245"
 publication_types: ["1"]
 publication: "_Proceedings of the 2018 ACM/SIGDA International Symposium on Field-Programmable Gate Arrays_"

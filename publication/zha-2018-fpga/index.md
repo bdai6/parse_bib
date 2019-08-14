@@ -1,7 +1,7 @@
 ---
 title: "Liquid  Silicon:  A Data-Centric Reconfigurable Architecture enabled by RRAM Technology"
 authors: ["Yue Zha","Jing Li"]
-date: 2018-02-01
+date: 2018-02-25
 doi: "10.1145/3174243.3174244"
 publication_types: ["1"]
 publication: "_Proceedings of the 2018 ACM/SIGDA International Symposium on Field-Programmable Gate Arrays_"
@@ -31,4 +31,4 @@ projects: []
 slides: ""
 ---
 
-(Acceptance Rate*: underline24%, Ranked textbf#1 among 100+ submissions)
+(Acceptance Rate*: underline24%, Ranked **#1** among 100+ submissions)

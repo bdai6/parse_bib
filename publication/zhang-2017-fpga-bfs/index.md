@@ -1,7 +1,7 @@
 ---
 title: "Boosting the Performance of FPGA-based Graph Processor Using Hybrid Memory Cube: A Case for Breadth First Search"
 authors: ["Jialiang Zhang","Soroosh Khoram","Jing Li"]
-date: 2017-01-01
+date: 2017-02-22
 doi: "10.1145/3020078.3021737"
 publication_types: ["1"]
 publication: "_Proceedings of the 2017 ACM/SIGDA International Symposium on Field-Programmable Gate Arrays_"

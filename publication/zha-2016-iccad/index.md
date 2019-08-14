@@ -1,7 +1,7 @@
 ---
 title: "Reconfigurable in-memory computing with resistive memory crossbar"
 authors: ["Yue Zha","Jing Li"]
-date: 2016-01-01
+date: 2016-11-07
 doi: "10.1145/2966986.2967069"
 publication_types: ["1"]
 publication: "_Proceedings of the 35th International Conference on Computer-Aided Design_"

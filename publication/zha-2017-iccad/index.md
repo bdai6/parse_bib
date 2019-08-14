@@ -1,7 +1,7 @@
 ---
 title: "RRAM-based reconfigurable in-memory computing architecture with hybrid routing"
 authors: ["Yue Zha","Jing Li"]
-date: 2017-11-01
+date: 2017-11-13
 doi: "10.1109/ICCAD.2017.8203822"
 publication_types: ["1"]
 publication: "_2017 IEEE/ACM International Conference on Computer-Aided Design (ICCAD)_"

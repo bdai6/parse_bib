@@ -1,7 +1,7 @@
 ---
 title: "Improving the Performance of OpenCL-based FPGA Accelerator for Convolutional Neural Network"
 authors: ["Jialiang Zhang","Jing Li"]
-date: 2017-01-01
+date: 2017-02-22
 doi: "10.1145/3020078.3021698"
 publication_types: ["1"]
 publication: "_Proceedings of the 2017 ACM/SIGDA International Symposium on Field-Programmable Gate Arrays_"

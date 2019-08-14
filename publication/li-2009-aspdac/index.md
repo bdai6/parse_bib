@@ -1,7 +1,7 @@
 ---
 title: "An Alternate Design Paradigm for Robust Spin-torque Transfer Magnetic RAM (STT MRAM) from Circuit/Architecture Perspective"
 authors: ["Jing Li","Patrick Ndai","Ashish Goel","Haixin Liu","Kaushik Roy"]
-date: 2009-01-01
+date: 2009-01-19
 doi: "10.1109/ASPDAC.2009.4796585"
 publication_types: ["1"]
 publication: "_Proceedings of the 2009 Asia and South Pacific Design Automation Conference_"

@@ -119,9 +119,6 @@ if __name__ == "__main__":
     # 7 = Thesis
     # 8 = Patent
     pubtype_dict = {
-        'phdthesis': '"7"',
-        'patent': '"8"',
-        'mastersthesis': '"7"',
         'Uncategorized': '"0"',
         'misc': '"0"',
         'inproceedings': '"1"',
@@ -132,6 +129,9 @@ if __name__ == "__main__":
         'techreport': '"4"',
         'book': '"5"',
         'incollection': '"6"',
+        'phdthesis': '"7"',
+        'mastersthesis': '"7"',
+        'patent': '"8"',
     }
     
     bib_database = bibtexparser.loads(bibtex_str)
@@ -175,7 +175,15 @@ if __name__ == "__main__":
                 the_file.write(authors_str[:-1]+']\n')
             
             # Date
-            if 'year' in entry:
+            ## just use the date if it's already there and is in yyyy-mm-dd format
+            if 'date' in entry:
+                if len(entry['date']) == 10:
+                    the_file.write('date: ' + entry['date'] + '\n')
+                    print('date: ' + entry['date'] + '\n')
+                else:
+                    the_file.write('date: ' + entry['date'] + '-01\n')
+                    print('date: ' + entry['date'] + '-01\n')
+            elif 'year' in entry:
                 date = entry['year']
                 if 'month' in entry:
                     if RepresentsInt(entry['month']):
@@ -185,7 +193,9 @@ if __name__ == "__main__":
                     date = date+'-'+ month.zfill(2)
                 else:
                     date = date+'-01'
-                the_file.write('date: '+date+'-01\n')                            
+                the_file.write('date: '+date+'-01\n')
+                print('date: '+date+'-01\n')                 
+
             # DOI
             if 'doi' in entry:
                 the_file.write('doi: "'+supetrim(entry['doi'])+'"\n')
@@ -212,6 +222,10 @@ if __name__ == "__main__":
                 the_file.write('publication: "_'+supetrim(entry['school'])+'_"\n')
             elif 'institution' in entry:
                 the_file.write('publication: "_'+supetrim(entry['institution'])+'_"\n')
+                
+            ## for articles, it should display title, _journal_, **volumne**, (number), page_start-page_end
+            
+            ## for proceedings, it should display title, _booktitle_, ser.series, location, month, year.
                 
             # I never put the short version. In the future I will use a dictionary like the authors to set the acronyms of important conferences and journals
             the_file.write('publication_short: ""\n')
