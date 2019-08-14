@@ -193,11 +193,11 @@ if __name__ == "__main__":
             # Treating the publication type
             if 'ENTRYTYPE' in entry:
                 if 'booktitle' in entry and ('Seminar' in supetrim(entry['booktitle'])):
-                    the_file.write('publication_types = ['+pubtype_dict['conference']+']\n')
+                    the_file.write('publication_types: ['+pubtype_dict['conference']+']\n')
                 elif 'booktitle' in entry and ('Workshop' in supetrim(entry['booktitle'])):
-                    the_file.write('publication_types = ['+pubtype_dict['conference']+']\n')
+                    the_file.write('publication_types: ['+pubtype_dict['conference']+']\n')
                 elif 'note' in entry and ('review' in supetrim(entry['note'])):
-                    the_file.write('publication_types = ['+pubtype_dict['submitted']+']\n')
+                    the_file.write('publication_types: ['+pubtype_dict['submitted']+']\n')
                 elif 'note' in entry and ('Conditional' in supetrim(entry['note'])):
                     the_file.write('publication_types: ['+pubtype_dict['submitted']+']\n')
                 else:

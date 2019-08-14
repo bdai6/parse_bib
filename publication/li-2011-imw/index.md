@@ -3,7 +3,7 @@ title: "A Novel Reconfigurable Sensing Scheme for Variable Level Storage in Phas
 authors: ["Jing Li","C. I. Wu","S. C. Lewis","J. Morrish","T. Y. Wang","R. Jordan","T. Maffitt","M. Breitwisch","A. Schrott","R. Cheek","H. L. Lung","C. Lam"]
 date: 2011-05-01
 doi: "10.1109/IMW.2011.5873227"
-publication_types = ["1"]
+publication_types: ["1"]
 publication: "_2011 3rd IEEE International Memory Workshop (textbfIMW)_"
 publication_short: ""
 summary: ""
