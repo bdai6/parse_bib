@@ -179,10 +179,8 @@ if __name__ == "__main__":
             if 'date' in entry:
                 if len(entry['date']) == 10:
                     the_file.write('date: ' + entry['date'] + '\n')
-                    print('date: ' + entry['date'] + '\n')
                 else:
                     the_file.write('date: ' + entry['date'] + '-01\n')
-                    print('date: ' + entry['date'] + '-01\n')
             elif 'year' in entry:
                 date = entry['year']
                 if 'month' in entry:
@@ -194,7 +192,6 @@ if __name__ == "__main__":
                 else:
                     date = date+'-01'
                 the_file.write('date: '+date+'-01\n')
-                print('date: '+date+'-01\n')                 
 
             # DOI
             if 'doi' in entry:
@@ -216,6 +213,10 @@ if __name__ == "__main__":
             # Treating the publication journal, conference, etc.
             if 'booktitle' in entry:
                 the_file.write('publication: "_'+supetrim(entry['booktitle'])+'_"\n')
+                ## including short name for conference proceedings
+                if 'series' in entry:
+                    the_file.write('publication: "_' + supetrim(entry['booktitle']) + ', ser. ' + supetrim(entry['series']) + '_"\n')
+                    print('publication: "_' + supetrim(entry['booktitle']) + ', ser. ' + supetrim(entry['series']) + '_"\n')
             elif 'journal' in entry:
                 the_file.write('publication: "_'+supetrim(entry['journal'])+'_"\n')
             elif 'school' in entry:
