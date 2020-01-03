@@ -200,6 +200,9 @@ if __name__ == "__main__":
                     the_file.write('doi: "'+supetrim(entry['doi'])+'"\n')
                             
                 # Treating the publication type
+                the_file.write('# Publication type.\n')
+                the_file.write('# Legend: 0 = Uncategorized; 1 = Conference paper; 2 = Journal article; 3 = Preprint / Working Paper; 4 = Report; 5 = Book; 6 = Book section; 7 = Thesis; 8 = Patent\n')
+                
                 if 'ENTRYTYPE' in entry:
                     if 'booktitle' in entry and ('Seminar' in supetrim(entry['booktitle'])):
                         the_file.write('publication_types: ['+pubtype_dict['conference']+']\n')
@@ -213,23 +216,42 @@ if __name__ == "__main__":
                         the_file.write('publication_types: ['+pubtype_dict[entry['ENTRYTYPE']]+']\n')
                 
                 # Treating the publication journal, conference, etc.
+                publication = 'publication: "_'
+                
+                ## for proceedings, it should display title, _booktitle_, ser.series, location, month, year.
                 if 'booktitle' in entry:
-                    the_file.write('publication: "_'+supetrim(entry['booktitle'])+'_"\n')
+                    publication = publication + supetrim(entry['booktitle']) + '_'
                     ## including short name for conference proceedings
                     if 'series' in entry:
-                        the_file.write('publication: "_' + supetrim(entry['booktitle']) + ', ser. ' + supetrim(entry['series']) + '_"\n')
-                        print('publication: "_' + supetrim(entry['booktitle']) + ', ser. ' + supetrim(entry['series']) + '_"\n')
+                        publication = publication + ', ser. ' + supetrim(entry['series'])
+                    if 'location' in entry:
+                            publication = publication + ', ' + supetrim(entry['location'])
+                    if 'month' in entry:
+                            publication = publication + ', ' + supetrim(entry['month'])
+                    if 'year' in entry:
+                            publication = publication + ', ' + supetrim(entry['year'])
+                    print(publication + '"\n')
+                    the_file.write(publication + '"\n')
+               
+                ## for articles, it should display title, _journal_, **volumne**, (number), page_start-page_end
                 elif 'journal' in entry:
-                    the_file.write('publication: "_'+supetrim(entry['journal'])+'_"\n')
+                    publication = publication + supetrim(entry['journal']) + '_'
+                    if 'volume' in entry:
+                        publication = publication + ', **' + supetrim(entry['volume']) + '**'
+                    if 'number' in entry:
+                        publication = publication + ', (' + supetrim(entry['number']) + ')'
+                    if 'pages' in entry:
+                        publication = publication + ', ' + supetrim(entry['pages'])
+                    print(publication + '"\n')
+                    the_file.write(publication + '"\n')
+                
                 elif 'school' in entry:
                     the_file.write('publication: "_'+supetrim(entry['school'])+'_"\n')
+                
                 elif 'institution' in entry:
                     the_file.write('publication: "_'+supetrim(entry['institution'])+'_"\n')
                     
-                ## for articles, it should display title, _journal_, **volumne**, (number), page_start-page_end
-                
-                ## for proceedings, it should display title, _booktitle_, ser.series, location, month, year.
-                    
+                                
                 # I never put the short version. In the future I will use a dictionary like the authors to set the acronyms of important conferences and journals
                 the_file.write('publication_short: ""\n')
                 
