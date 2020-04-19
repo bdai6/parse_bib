@@ -13,6 +13,8 @@ import bibtexparser
 from bibtexparser.bwriter import BibTexWriter
 from bibtexparser.bibdatabase import BibDatabase
 import os, sys, getopt, re
+import datetime
+
 
 def RepresentsInt(s):
     try:
@@ -20,6 +22,17 @@ def RepresentsInt(s):
         return True
     except ValueError:
         return False
+    
+
+# check if the date entry is the correct format, i.e., year-month-day
+def IsDateFormatValid(str):
+    try:
+        datetime.datetime.strptime(str, '%Y-%m-%d')
+        return True
+    except ValueError as err:
+        print(err)
+        return False
+
 
 # remove all decorative expression in a string
 def supetrim(string):
@@ -147,7 +160,7 @@ if __name__ == "__main__":
         # If the same publication exists, then skip the creation. I customize the .md files later, so I don't want them overwritten. Only new publications are created.
         if os.path.isfile(filenm):
             print("publication " + dirName + " already exists. Skipping...")
-            pass
+#            pass
         else:
             with open(filenm, 'w', encoding='utf8') as the_file:
                 the_file.write('---\n')
@@ -177,7 +190,7 @@ if __name__ == "__main__":
                     the_file.write(authors_str[:-1]+']\n')
                 
                 # Date
-                ## just use the date if it's already there and is in yyyy-mm-dd format
+                ## in bib file the date is usually in year-month-date format                
                 if 'date' in entry:
                     if len(entry['date']) == 10:
                         the_file.write('date: ' + entry['date'] + '\n')
