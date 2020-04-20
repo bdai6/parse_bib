@@ -32,6 +32,16 @@ def IsDateFormatValid(str):
     except ValueError as err:
         print(err)
         return False
+    
+
+# check if the date entry is the correct format, i.e., year-month
+def IsOtherDateFormatValid(str):
+    try:
+        datetime.datetime.strptime(str, '%Y-%m')
+        return True
+    except ValueError as err:
+        print(err)
+        return False
 
 
 # remove all decorative expression in a string
@@ -62,6 +72,30 @@ def month_string_to_number(string):
     except:
         raise ValueError('Not a month')
         
+        
+# convert 01, 02, 03 etc to Jan, Feb, Mar etc
+def month_number_to_string(num):
+    m = {
+        1:'Jan',
+        2:'Feb',
+        3:'Mar',
+        4:'Apr',
+        5:'May',
+        6:'Jun',
+        7:'Jul',
+        8:'Aug',
+        9:'Sep',
+        10:'Oct',
+        11:'Nov',
+        12:'Dec'
+        }
+
+    try:
+        out = m[num]
+        return out
+    except:
+        raise ValueError('Not a month')
+
         
 # remove empty elements from a string
 def removeEmptyString(inStr):
@@ -148,7 +182,16 @@ if __name__ == "__main__":
     }
     
     bib_database = bibtexparser.loads(bibtex_str)
+    currDate = datetime.datetime.now()  # today's date in year, month, day.
+    numRef = 0
+
     for entry in bib_database.entries:
+        numRef += 1
+        print(str(numRef) + ": " + entry['ID'])
+        
+        # only True when date entry contains month info or month entry available
+        monthInfoAvailable = False
+
         dirName = formatID(entry['ID'])
 #        filedir = 'content/en/publication/'+entry['ID'] 
         filedir = 'publication/' + dirName
@@ -160,12 +203,12 @@ if __name__ == "__main__":
         # If the same publication exists, then skip the creation. I customize the .md files later, so I don't want them overwritten. Only new publications are created.
         if os.path.isfile(filenm):
             print("publication " + dirName + " already exists. Skipping...")
-#            pass
+            pass
         else:
             with open(filenm, 'w', encoding='utf8') as the_file:
                 the_file.write('---\n')
 
-                the_file.write('draft: false\n')
+                the_file.write('draft: false\n')  # assume every bib entry will be published
 
                 # Treating the title of the publication
                 the_file.write('title: "'+supetrim(entry['title'])+'"\n')
@@ -190,23 +233,58 @@ if __name__ == "__main__":
                     the_file.write(authors_str[:-1]+']\n')
                 
                 # Date
-                ## in bib file the date is usually in year-month-date format                
+                # formatting publication date to be YYYY-MM-DD
                 if 'date' in entry:
-                    if len(entry['date']) == 10:
-                        the_file.write('date: ' + entry['date'] + '\n')
-                    else:
-                        the_file.write('date: ' + entry['date'] + '-01\n')
+                    monthInfoAvailable = True # assume month info always in date entry
+                    print('original date entry:', entry['date'])
+                    # date format: year-month-day
+                    if IsDateFormatValid(entry['date']):
+                        origDate = datetime.datetime.strptime(entry['date'], '%Y-%m-%d')  #in datetime.datetime datetype
+                        pubDate = str(origDate.year) + '-' + str(origDate.month).zfill(2) + '-' + str(origDate.day).zfill(2)
+                        print('formatted date with existing date (year-month-day): ' + pubDate)
+                    # date format: year-month
+                    elif IsOtherDateFormatValid(entry['date']):
+                        origDate = datetime.datetime.strptime(entry['date'], '%Y-%m')
+                        pubDate = str(origDate.year) + '-' + str(origDate.month).zfill(2) + '-01'
+                        print('formatted date with existing date (year-month): ' + pubDate)
+                    pubMonth = month_number_to_string(origDate.month) # used for "publication" item in index.md
+                    print('publication month: ' + pubMonth)
+#                    print('when date in entry: ' + pubDate)
+                    the_file.write('date: ' + pubDate + '\n')
                 elif 'year' in entry:
-                    date = entry['year']
+                    pubDate = entry['year']
+                    print('original date entry:', pubDate)
                     if 'month' in entry:
+                        monthInfoAvailable = True
+                        print('publication month:', entry['month'])
+                        # month is in digital format, i.e. 01, 02, ...,12
                         if RepresentsInt(entry['month']):
-                            month = entry['month']
+                            month = entry['month'] # string
                         else:
+                            # convert Jan, Feb, etc to 01, 02, ...
                             month = str(month_string_to_number(entry['month']))
-                        date = date+'-'+ month.zfill(2)
-                    else:
-                        date = date+'-01'
-                    the_file.write('date: '+date+'-01\n')
+                        pubDate = pubDate + '-' + month.zfill(2) + '-01'
+                        pubMonth = month_number_to_string(int(month))
+                        print('formatted date with existing year and month entry: ' + pubDate)
+                        print('publication month: '+ pubMonth)
+                    else: 
+                        # first, check if the status of the publication
+                        if 'pubstate' in entry:
+                            pubState = entry['pubstate']
+                            print(pubState)
+                            if pubState == 'forthcoming' or pubState == 'upcoming' or pubState == 'accepted':
+                                pubDate = str(currDate.year) + '-' + str(currDate.month).zfill(2) + '-' + str(currDate.day).zfill(2)
+                                print('upcoming publication date: '+ pubDate)
+                            else:  #draft, submitted, under review, preprint, etc.
+                                pubDate = pubDate + '-01-01'                
+                        else: # most likely the entry is for an old publication with only published year               
+                            pubDate = pubDate + '-01-01'
+                        print('publication with only year entry: ' + pubDate)
+#                    print('when year in entry: ' + pubDate)
+                    the_file.write('date: ' + pubDate + '\n')
+                else:  # rare case, no year, month, day info
+                    print('Error: No publication date - check the bib entry')
+                    the_file.write('date: N/A\n')
 
                 # DOI
                 if 'doi' in entry:
@@ -225,6 +303,8 @@ if __name__ == "__main__":
                         the_file.write('publication_types: ['+pubtype_dict['submitted']+']\n')
                     elif 'note' in entry and ('Conditional' in supetrim(entry['note'])):
                         the_file.write('publication_types: ['+pubtype_dict['submitted']+']\n')
+                    elif 'pubstate' in entry and ('preprint' in supetrim(entry['pubstate'])):
+                        the_file.write('publication_types: ['+pubtype_dict['preprint']+']\n')
                     else:
                         the_file.write('publication_types: ['+pubtype_dict[entry['ENTRYTYPE']]+']\n')
                 
@@ -239,9 +319,12 @@ if __name__ == "__main__":
                         publication = publication + ', ser. ' + supetrim(entry['series'])
                     if 'location' in entry:
                             publication = publication + ', ' + supetrim(entry['location'])
-                    if 'month' in entry:
-                            publication = publication + ', ' + supetrim(entry['month'])
-                    if 'year' in entry:
+                    if monthInfoAvailable:
+                        publication = publication + ', ' + pubMonth
+                    # in case the publication is "accepted" or "forthcoming"
+                    if 'pubstate' in entry and ('preprint' not in supetrim(entry['pubstate'])):
+                        publication = publication + ', ' + supetrim(entry['pubstate'])
+                    elif 'year' in entry:
                             publication = publication + ', ' + supetrim(entry['year'])
                     print(publication + '"\n')
                     the_file.write(publication + '"\n')
@@ -255,6 +338,11 @@ if __name__ == "__main__":
                         publication = publication + ', (' + supetrim(entry['number']) + ')'
                     if 'pages' in entry:
                         publication = publication + ', ' + supetrim(entry['pages'])
+                    # in case the publication is "accepted" or "forthcoming"
+                    if 'pubstate' in entry and ('preprint' not in supetrim(entry['pubstate'])):
+                        publication = publication + ', ' + supetrim(entry['pubstate'])
+                    elif 'year' in entry:
+                        publication = publication + ', ' + supetrim(entry['year'])
                     print(publication + '"\n')
                     the_file.write(publication + '"\n')
                 
@@ -263,6 +351,8 @@ if __name__ == "__main__":
                 
                 elif 'institution' in entry:
                     the_file.write('publication: "_'+supetrim(entry['institution'])+'_"\n')
+                else:
+                    the_file.write('publication: ""\n')
                     
                                 
                 # I never put the short version. In the future I will use a dictionary like the authors to set the acronyms of important conferences and journals
@@ -283,7 +373,7 @@ if __name__ == "__main__":
                     keyword_str = ''
                     for keyword in the_keywords:
                         keyword_strip = supetrim(keyword)
-                        keyword_str = keyword_str+ '"'+keyword_strip.lower()+'",'
+                        keyword_str = keyword_str + '"'+ keyword_strip.lower() + '",'
                     the_file.write(keyword_str[:-1]+']\n')
                 else:
                     the_file.write('tags: []\n')
@@ -299,7 +389,14 @@ if __name__ == "__main__":
                 # disabled for now
                 #the_file.write('url_pdf: "/publication/'+entry['ID']+'/manuscript.pdf"\n')
                 the_file.write('url_pdf:\n')
-                the_file.write('url_code:\nurl_dataset:\nurl_poster:\nurl_project:\nurl_slides:\nurl_source:\nurl_video:\n\n')
+                the_file.write('url_code:\n')
+                the_file.write('url_dataset:\n')
+                the_file.write('url_poster:\n')
+                the_file.write('url_project:\n')
+                the_file.write('url_slides:\n')
+                if 'url' in entry:
+                    the_file.write('url_source: ' + supetrim(entry['url']) + '\n')
+                the_file.write('url_video:\n\n')
                 
                 # Default parameters that can be later customized
                 the_file.write('image:\n')
